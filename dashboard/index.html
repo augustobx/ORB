@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading System Dashboard | Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Header -->
+        <header class="glass-panel main-header">
+            <div class="brand">
+                <div class="logo-glow"></div>
+                <h1>QUANT<span>TRADER</span> <span class="version-tag">v2.0</span></h1>
+            </div>
+            <div class="system-status">
+                <div class="status-indicator">
+                    <span class="dot pulse-green" id="status-dot"></span>
+                    <span class="status-text" id="status-text">System Online</span>
+                </div>
+                <div class="clock" id="ny-clock">09:30:00 NY</div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <main class="dashboard-grid">
+            
+            <!-- Live Monitor Panel -->
+            <section class="glass-panel panel-live">
+                <div class="panel-header">
+                    <h2>Live Monitoring</h2>
+                    <span class="badge pulse-border">Real-time</span>
+                </div>
+                <div class="live-metrics">
+                    <div class="metric-card">
+                        <div class="metric-icon">🎯</div>
+                        <div class="metric-info">
+                            <h3>VWAP Dist.</h3>
+                            <div class="metric-value" id="live-vwap-dist">-- pts</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">📈</div>
+                        <div class="metric-info">
+                            <h3>Position</h3>
+                            <div class="metric-value" id="live-position">None</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">💰</div>
+                        <div class="metric-info">
+                            <h3>Today's PnL</h3>
+                            <div class="metric-value highlight-green" id="live-pnl">$0.00</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="live-chart-container">
+                    <!-- Placeholder for future live chart -->
+                    <div class="chart-placeholder">
+                        <div class="scanner-line"></div>
+                        <p>Awaiting Live Action...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Console Panel -->
+            <section class="glass-panel panel-console">
+                <div class="panel-header">
+                    <h2>System Logs & Alerts</h2>
+                    <button id="clear-logs" class="btn-small">Clear Logs</button>
+                </div>
+                <div class="console-window" id="error-console">
+                    <!-- Logs will be injected here -->
+                </div>
+            </section>
+
+            <!-- Trade History Panel -->
+            <section class="glass-panel panel-backtest">
+                <div class="panel-header">
+                    <h2>Trade History & Analytics</h2>
+                    <span class="badge badge-blue">CSV Sync Live</span>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-icon">📊</div>
+                        <span>Total Trades</span>
+                        <h3 id="hist-total-trades">0</h3>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">🎯</div>
+                        <span>Win Rate</span>
+                        <h3 id="hist-win-rate">0.0%</h3>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">💵</div>
+                        <span>Total PnL</span>
+                        <h3 id="hist-total-pnl" class="highlight-green">$0.00</h3>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">🚀</div>
+                        <span>Avg ROI</span>
+                        <h3 id="hist-avg-roi">0.00%</h3>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ticket</th>
+                                <th>Asset</th>
+                                <th>Side</th>
+                                <th>Size</th>
+                                <th>Entry Time</th>
+                                <th>Entry Px</th>
+                                <th>Exit Time</th>
+                                <th>Exit Px</th>
+                                <th>PnL (USD)</th>
+                                <th>ROI (%)</th>
+                                <th>Reason</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trade-history-body">
+                            <!-- Rows dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
