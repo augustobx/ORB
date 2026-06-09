@@ -66,9 +66,14 @@ def get_live_vwap():
     broker_minute = config.NY_OPEN_MINUTE
 
     # Filtramos solo la sesión desde la apertura
+    hoy = pd.to_datetime('today').date()
+    df['date'] = df['time'].dt.date
     session = df[
-        ((df["hour"] == broker_hour) & (df["minute"] >= broker_minute))
-        | (df["hour"] > broker_hour)
+        (df['date'] == hoy) & 
+        (
+            ((df["hour"] == broker_hour) & (df["minute"] >= broker_minute))
+            | (df["hour"] > broker_hour)
+        )
     ]
 
     if session.empty:
@@ -117,7 +122,7 @@ def execute_with_fallback(request):
     return result
 
 
-def open_market_order(order_type, sl_points):
+def open_market_order(order_type, sl_points, current_vwap):
     """
     Calcula el lotaje dinámico para arriesgar exactamente $100 y lanza orden a mercado.
     """
@@ -141,7 +146,7 @@ def open_market_order(order_type, sl_points):
         "type": order_type,
         "price": price,
         "sl": sl_price,
-        "tp": 0.0,
+        "tp": round(current_vwap, 2),
         "deviation": 20,
         "magic": config.MAGIC_NUMBER,
         "comment": "VWAP 2.0",
@@ -342,7 +347,7 @@ def main():
                                 f"¡SOBRECOMPRA EXTREMA DETECTADA! Distancia: {distancia:.2f} pts. Entrando en CORTO (SELL)..."
                             )
                             result_ticket = open_market_order(
-                                mt5.ORDER_TYPE_SELL, config.VWAP_SL_PTS
+                                mt5.ORDER_TYPE_SELL, config.VWAP_SL_PTS, vwap
                             )
                             if result_ticket:
                                 trade_taken_today = True
@@ -355,7 +360,7 @@ def main():
                                 f"¡SOBREVENTA EXTREMA DETECTADA! Distancia: {distancia:.2f} pts. Entrando en LARGO (BUY)..."
                             )
                             result_ticket = open_market_order(
-                                mt5.ORDER_TYPE_BUY, config.VWAP_SL_PTS
+                                mt5.ORDER_TYPE_BUY, config.VWAP_SL_PTS, vwap
                             )
                             if result_ticket:
                                 trade_taken_today = True
@@ -366,12 +371,13 @@ def main():
                     # 2. GESTIÓN DE SALIDA DINÁMICA (Si estamos en un trade)
                     elif has_active_position:
                         pos = positions[0]
+                        buffer_salida = 3.0  
                         # Si estamos COMPRADOS y el precio cruza por encima del VWAP (Llegamos al objetivo)
-                        if pos.type == mt5.ORDER_TYPE_BUY and tick.bid >= vwap:
+                        if pos.type == mt5.ORDER_TYPE_BUY and tick.bid >= (vwap - buffer_salida):
                             close_position(pos, "VWAP Target")
 
                         # Si estamos VENDIDOS y el precio cruza por debajo del VWAP (Llegamos al objetivo)
-                        elif pos.type == mt5.ORDER_TYPE_SELL and tick.ask <= vwap:
+                        elif pos.type == mt5.ORDER_TYPE_SELL and tick.ask <= (vwap + buffer_salida):
                             close_position(pos, "VWAP Target")
 
             # 3. CIERRE FORZADO DE FIN DE DÍA (15:55 NY)

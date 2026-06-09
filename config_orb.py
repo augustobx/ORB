@@ -32,10 +32,10 @@ VWAP_WARMUP_MINUTES = 30
 # PARÁMETROS DE LA ESTRATEGIA ORB
 # ------------------------------------------
 ORB_MINUTES = 15  # Tamaño de la caja en minutos
-MAX_BOX_SIZE_PERCENT = 1.0  # Máximo tamaño de la caja permitido (%)
+MAX_BOX_SIZE_PERCENT = 0.6  # Máximo tamaño de la caja permitido (%)
 BUFFER_POINTS = 10.0  # Distancia para las órdenes stop
-TS_ACTIVATION_POINTS = 20.0  # Puntos de ganancia para activar Trailing Stop
-TS_DISTANCE_POINTS = 10.0  # Distancia del Trailing Stop
+TS_ACTIVATION_POINTS = 45.0  # Puntos de ganancia para activar Trailing Stop
+TS_DISTANCE_POINTS = 25.0  # Distancia del Trailing Stop
 
 
 # ------------------------------------------
